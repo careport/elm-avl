@@ -14,6 +14,9 @@ data structure.
 The upside, of course, is that you are not limited to using
 `comparable` types as keys.
 
+(The implementation is based on Blelloch, Ferizovic, and Sun:
+"[Just Join for Parallel Ordered Sets](https://www.cs.cmu.edu/~guyb/papers/BFS16.pdf)," SPAA 2016.)
+
 # Comparison
 @docs Cmp
 
