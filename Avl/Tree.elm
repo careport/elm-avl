@@ -274,7 +274,7 @@ rotateRight t =
       br (br lt v rlt) vr rrt
 
     _ ->
-      Debug.crash "AVL invarant violated in rotateRight"
+      Debug.crash "AVL invariant violated in rotateRight"
 
 -- splitLast is an internal function that can only be used on
 -- non-empty trees
