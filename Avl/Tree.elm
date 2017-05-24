@@ -1,13 +1,17 @@
 module Avl.Tree exposing (..)
 
+import Avl exposing (Cmp)
+
 type Node k v
   = Br Int (Node k v) (k, v) (Node k v)
   | Lf
 
-type alias Cmp k = k -> k -> Order
-
 empty: Node k v
 empty = Lf
+
+singleton: k -> v -> Node k v
+singleton key val =
+  br Lf (key, val) Lf
 
 size: Node k v -> Int
 size t =
@@ -141,6 +145,15 @@ foldr f nil t =
         nres = f k v rres
       in
         foldr f nres lt
+
+foldk: (k -> v -> b -> (b -> b) -> b) -> b -> Node k v -> (b -> b) -> b
+foldk fn nil t kont =
+  case t of
+    Lf ->
+      kont nil
+
+    Br _ lt (k, v) rt ->
+      fn k v nil (\nil1 -> foldk fn nil1 lt (\nil2 -> foldk fn nil2 rt kont))
 
 toList: Node k v -> List (k, v)
 toList t =
