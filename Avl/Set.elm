@@ -10,6 +10,7 @@ module Avl.Set exposing
   , union
   , intersect
   , difference
+  , fromList
   , Set )
 
 import Avl.Tree as Tree exposing (Cmp)
@@ -55,3 +56,7 @@ intersect cmp (Set t1) (Set t2) =
 difference: Cmp k -> Set k -> Set k -> Set k
 difference cmp (Set t1) (Set t2) =
   Set (Tree.difference cmp t1 t2)
+
+fromList: Cmp k -> List k -> Set k
+fromList cmp xs =
+  List.foldl (\k nil -> insert cmp k nil) empty xs

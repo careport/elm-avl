@@ -11,6 +11,7 @@ module Avl.Dict exposing
   , toList
   , keys
   , values
+  , fromList
   , Dict )
 
 import Avl.Tree as Tree exposing (Cmp)
@@ -59,3 +60,7 @@ keys (Dict t) = Tree.keys t
 
 values: Dict k v -> List v
 values (Dict t) = Tree.values t
+
+fromList: Cmp k -> List (k, v) -> Dict k v
+fromList cmp xs =
+  Dict (Tree.fromList cmp xs)
