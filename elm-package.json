@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "AVL tree-based Dicts and Sets using explicit comparison functions",
-    "repository": "https://github.com/user/project.git",
+    "repository": "https://github.com/careport/elm-avl.git",
     "license": "BSD3",
     "source-directories": [
         "."
