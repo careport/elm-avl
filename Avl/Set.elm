@@ -109,16 +109,8 @@ difference cmp (Set t1) (Set t2) =
 {-| `True` if the first set is a subset of the second,
 `False` otherwise. -}
 subset: Cmp k -> Set k -> Set k -> Bool
-subset cmp (Set t1) (Set t2) =
-  let
-    -- We use foldk so we can exit early
-    fn key _ _ kont =
-      if Tree.member cmp key t2 then
-        kont True
-      else
-        False
-  in
-    Tree.foldk fn True t1 identity
+subset cmp s1 s2 =
+  isEmpty (difference cmp s1 s2)
 
 {-| Constructs a set from a list of elements. -}
 fromList: Cmp k -> List k -> Set k
