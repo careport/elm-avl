@@ -1,10 +1,23 @@
 module Avl.Tree exposing (..)
 
-import Avl exposing (Cmp)
+import Avl exposing (..)
 
 type Node k v
   = Br Int (Node k v) (k, v) (Node k v)
   | Lf
+
+type Enum k v
+  = More (k, v) (Node k v) (Enum k v)
+  | End
+
+isAvl: Node k v -> Bool
+isAvl t =
+  case t of
+    Lf -> True
+    Br _ l _ r ->
+      ((abs ((height l) - (height r))) < 2) &&
+      (isAvl l) &&
+      (isAvl r)
 
 empty: Node k v
 empty = Lf
@@ -146,15 +159,6 @@ foldr f nil t =
       in
         foldr f nres lt
 
-foldk: (k -> v -> b -> (b -> b) -> b) -> b -> Node k v -> (b -> b) -> b
-foldk fn nil t kont =
-  case t of
-    Lf ->
-      kont nil
-
-    Br _ lt (k, v) rt ->
-      fn k v nil (\nil1 -> foldk fn nil1 lt (\nil2 -> foldk fn nil2 rt kont))
-
 toList: Node k v -> List (k, v)
 toList t =
   foldr (\k v xs -> (k, v) :: xs) [] t
@@ -170,6 +174,28 @@ values t =
 fromList: Cmp k -> List (k, v) -> Node k v
 fromList cmp xs =
   List.foldl (\(k, v) nil -> insert cmp k v nil) empty xs
+
+eq: Eq k -> Eq v -> Node k v -> Node k v -> Bool
+eq keyEq valEq t1 t2 =
+  let
+    enum t e =
+      case t of
+        Lf -> e
+        Br _ l kv r -> enum l (More kv r e)
+
+    go e1 e2 =
+      case (e1, e2) of
+        (End, End) -> True
+        (End, _)   -> False
+        (_, End)   -> False
+
+        (More (k1, v1) r1 e1, More (k2, v2) r2 e2) ->
+          (keyEq k1 k2) &&
+          (valEq v1 v2) &&
+          (go (enum r1 e1) (enum r2 e2))
+
+  in
+    go (enum t1 End) (enum t2 End)
 
 br: Node k v -> (k, v) -> Node k v -> Node k v
 br left kv right =
@@ -258,8 +284,8 @@ joinLeft lt kv rt =
     _ ->
       Debug.crash "impossible: encountered leaf in joinLeft"
 
-rotateLeft: Node k v -> Node k v
-rotateLeft t =
+rotateRight: Node k v -> Node k v
+rotateRight t =
   case t of
     Br _ (Br _ llt vl lrt) v rt ->
       br llt vl (br lrt v rt)
@@ -267,8 +293,8 @@ rotateLeft t =
     _ ->
       Debug.crash "AVL invariant violated in rotateLeft"
 
-rotateRight: Node k v -> Node k v
-rotateRight t =
+rotateLeft: Node k v -> Node k v
+rotateLeft t =
   case t of
     Br _ lt v (Br _ rlt vr rrt) ->
       br (br lt v rlt) vr rrt

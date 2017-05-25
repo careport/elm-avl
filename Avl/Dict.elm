@@ -14,6 +14,7 @@ module Avl.Dict exposing
   , keys
   , values
   , fromList
+  , eq
   , Dict )
 
 {-| A dictionary mapping unique keys to values. The keys can have
@@ -30,7 +31,7 @@ The interface is otherwise very similar to the core `Dict` type.
 @docs empty, singleton, insert, update, remove
 
 # Query
-@docs isEmpty, member, get, size
+@docs isEmpty, member, get, size, eq
 
 # Lists
 @docs keys, values, toList, fromList
@@ -40,7 +41,7 @@ The interface is otherwise very similar to the core `Dict` type.
 
 -}
 
-import Avl exposing (Cmp)
+import Avl exposing (Cmp, Eq)
 import Avl.Tree as Tree
 
 {-| A dictionary from keys to values -}
@@ -124,3 +125,8 @@ values (Dict t) = Tree.values t
 fromList: Cmp k -> List (k, v) -> Dict k v
 fromList cmp xs =
   Dict (Tree.fromList cmp xs)
+
+{-| Tests if two dictionaries contain the same key-value pairs. -}
+eq: Eq k -> Eq v -> Dict k v -> Dict k v -> Bool
+eq keyEq valEq (Dict t1) (Dict t2) =
+  Tree.eq keyEq valEq t1 t2

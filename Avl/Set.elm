@@ -14,6 +14,7 @@ module Avl.Set exposing
   , difference
   , subset
   , fromList
+  , eq
   , Set )
 
 {-| A set of elements. The elements can have any type,
@@ -27,7 +28,7 @@ function with type `k -> k -> Order`.
 @docs empty, singleton, insert, remove, union, intersect, difference
 
 # Query
-@docs isEmpty, member, size, subset
+@docs isEmpty, member, size, subset, eq
 
 # Lists
 @docs toList, fromList
@@ -37,7 +38,7 @@ function with type `k -> k -> Order`.
 
 -}
 
-import Avl exposing (Cmp)
+import Avl exposing (Cmp, Eq)
 import Avl.Tree as Tree
 
 {-| A set of elements. -}
@@ -116,3 +117,8 @@ subset cmp s1 s2 =
 fromList: Cmp k -> List k -> Set k
 fromList cmp xs =
   List.foldl (\k nil -> insert cmp k nil) empty xs
+
+{-| Tests if two sets contain the same elements. -}
+eq: Eq k -> Set k -> Set k -> Bool
+eq eltEq (Set t1) (Set t2) =
+  Tree.eq eltEq (\_ _ -> True) t1 t2
