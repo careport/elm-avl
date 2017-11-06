@@ -8,6 +8,7 @@ module Avl.Set exposing
   , remove
   , foldl
   , foldr
+  , filter
   , toList
   , union
   , intersect
@@ -34,7 +35,7 @@ function with type `k -> k -> Order`.
 @docs toList, fromList
 
 # Transform
-@docs foldl, foldr
+@docs foldl, foldr, filter
 
 -}
 
@@ -86,6 +87,14 @@ the greatest element to the least. -}
 foldr: (k -> b -> b) -> b -> Set k -> b
 foldr fn nil (Set t) =
   Tree.foldr (\k _ b -> fn k b) nil t
+
+{-| Creates a new Set containing only the elements that satisfy a predicate. -}
+filter: Cmp k -> (k -> Bool) -> Set k -> Set k
+filter cmp predicate (Set t) =
+  let
+    p k _ = predicate k
+  in
+    Set (Tree.filter cmp p t)
 
 {-| Returns a list containing all of the set's elements, in order from
 least to greatest. -}

@@ -26,7 +26,7 @@ tests =
         , describe "foldl" foldlTests
         , describe "foldr" foldrTests
 --        , describe "map" mapTests
---        , describe "filter" filterTests
+        , describe "filter" filterTests
 --        , describe "partition" partitionTests
         , describe "union" unionTests
         , describe "intersect" intersectTests
@@ -173,15 +173,15 @@ foldrTests =
     ]
 
 
--- filterTests : List Test
--- filterTests =
---     [ test "with always True doesn't change anything" <|
---         \() -> Expect.equal set1To100 (Set.filter (always True) set1To100)
---     , test "with always False returns empty set" <|
---         \() -> Expect.equal Set.empty (Set.filter (always False) set1To100)
---     , test "simple filter" <|
---         \() -> Expect.equal set1To50 (Set.filter isLessThan51 set1To100)
---     ]
+filterTests : List Test
+filterTests =
+    [ test "with always True doesn't change anything" <|
+        \() -> Expect.equal set1To100 (Set.filter cmp (always True) set1To100)
+    , test "with always False returns empty set" <|
+        \() -> Expect.equal Set.empty (Set.filter cmp (always False) set1To100)
+    , test "simple filter" <|
+        \() -> Expect.equal set1To50 (Set.filter cmp isLessThan51 set1To100)
+    ]
 
 
 -- partitionTests : List Test

@@ -10,6 +10,7 @@ module Avl.Dict exposing
   , update
   , foldl
   , foldr
+  , filter
   , toList
   , keys
   , values
@@ -37,7 +38,7 @@ The interface is otherwise very similar to the core `Dict` type.
 @docs keys, values, toList, fromList
 
 # Transform
-@docs foldl, foldr
+@docs foldl, foldr, filter
 
 -}
 
@@ -105,6 +106,11 @@ starting with the highest-valued key and ending with the lowest-valued one. -}
 foldr: (k -> v -> b -> b) -> b -> Dict k v -> b
 foldr fn nil (Dict t) =
   Tree.foldr fn nil t
+
+{-| Creates a new Dict containing only the elements that satisfy a predicate. -}
+filter: Cmp k -> (k -> v -> Bool) -> Dict k v -> Dict k v
+filter cmp predicate (Dict t) =
+  Dict (Tree.filter cmp predicate t)
 
 {-| Returns a list of all the key-value pairs in the dictionary, in order
 from lowest to highest by key. -}

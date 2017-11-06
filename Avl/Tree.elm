@@ -163,6 +163,17 @@ toList: Node k v -> List (k, v)
 toList t =
   foldr (\k v xs -> (k, v) :: xs) [] t
 
+filter: Cmp k -> (k -> v -> Bool) -> Node k v -> Node k v
+filter cmp predicate t =
+  let
+    fn k v xs =
+      if predicate k v then
+        insert cmp k v xs
+      else
+        xs
+  in
+    foldl fn empty t
+
 keys: Node k v -> List k
 keys t =
   foldr (\k _ xs -> k::xs) [] t
