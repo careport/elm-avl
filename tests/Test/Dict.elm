@@ -46,8 +46,14 @@ tests =
                 , test "size of example dictionary" <| \() -> Expect.equal 2 (Dict.size animals)
                 ]
 
+        transformTests =
+            describe "transform Tests"
+                [ test "filter" <| \() -> Expect.equal (Dict.singleton "Tom" "cat") (Dict.filter strCmp (\k v -> k == "Tom") animals)
+                ]
+
     in
         describe "Dict Tests"
             [ buildTests
             , queryTests
+            , transformTests
             ]
